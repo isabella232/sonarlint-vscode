@@ -40,7 +40,7 @@ jarDependencies.map(dep => {
     console.info(`Skipping download of ${dep.artifactId}, no credentials`);
     return;
   }
-  downloadIfNeeded(artifactUrl(dep), dep.output);
+  downloadIfNeeded(dep.file ? dep.file : artifactUrl(dep), dep.output);
 });
 
 function artifactUrl(dep) {

@@ -3,6 +3,7 @@
     "groupId": "org.sonarsource.sonarlint.ls",
     "artifactId": "sonarlint-language-server",
     "version": "2.3.0.42299",
+    "if_you_need_to_point_to_local___file": "file:/path/to/sonarlint-language-server/target/sonarlint-language-server-2.3-SNAPSHOT.jar",
     "output": "server/sonarlint-ls.jar"
   },
   {
@@ -46,6 +47,14 @@
     "artifactId": "sonar-secrets-plugin",
     "version": "1.1.0.36766",
     "output": "analyzers/sonarsecrets.jar",
+    "requiresCredentials": true
+  },
+  {
+    "groupId": "com.sonarsource.cpp",
+    "artifactId": "sonar-cfamily-plugin",
+    "version": "6.30.0.42324",
+    "if_you_need_to_point_to_local___file": "file:/path/to/sonar-cfamily-plugin-6.31-SNAPSHOT-all.jar",
+    "output": "analyzers/sonarcfamily.jar",
     "requiresCredentials": true
   }
 ]
