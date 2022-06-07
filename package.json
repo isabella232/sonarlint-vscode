@@ -446,6 +446,16 @@
         "command": "SonarLint.ClearLocations",
         "title": "Clear",
         "enablement": "view == SonarLint.IssueLocations"
+      },
+      {
+        "command": "SonarLint.ConnectToSonarQube",
+        "title": "Connect to SonarQube",
+        "category": "SonarLint"
+      },
+      {
+        "command": "SonarLint.ConnectToSonarCloud",
+        "title": "Connect to SonarCloud",
+        "category": "SonarLint"
       }
     ],
     "views": {
@@ -457,6 +467,10 @@
         {
           "id": "SonarLint.IssueLocations",
           "name": "SonarLint Issue Locations"
+        },
+        {
+          "id": "SonarLint.ConnectedMode",
+          "name": "SonarLint Connected Mode"
         }
       ]
     },
@@ -464,6 +478,10 @@
       {
         "view": "SonarLint.IssueLocations",
         "contents": "No locations to show.\nUse \"Show all locations\" code action from a SonarLint issue."
+      },
+      {
+        "view": "SonarLint.ConnectedMode",
+        "contents": "No SonarQube/SonarCloud connections found [learn more](https://marketplace.visualstudio.com/items?itemName=SonarSource.sonarlint-vscode#connected-mode).\n[Add SonarQube Connection](command:SonarLint.ConnectToSonarQube)\n[Add SonarCloud Connection](command:SonarLint.ConnectToSonarCloud)"
       }
     ],
     "menus": {
@@ -554,7 +572,7 @@
       }
     ]
   },
-  "main": "./dist/extension",
+  "main": "out/src/extension",
   "files": [
     "server/sonarlint-ls.jar",
     "analyzers"
@@ -632,5 +650,11 @@
     "arrowParens": "avoid",
     "trailingComma": "none",
     "bracketSpacing": true
+  },
+  "__metadata": {
+    "id": "a7fa941e-bcda-486f-8141-8483a6286177",
+    "publisherDisplayName": "SonarSource",
+    "publisherId": "08b9cc7e-b259-49cd-b013-dfa5357b0a83",
+    "isPreReleaseVersion": false
   }
 }
