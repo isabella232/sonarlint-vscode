@@ -5,12 +5,10 @@ export class Connection extends VSCode.TreeItem {
         public readonly id: string,
         public readonly label: string,
         public readonly collapsibleState: VSCode.TreeItemCollapsibleState,
-        public readonly type: 'sonarqube' | 'sonarcloud'
+        public readonly contextValue: 'sonarqubeConnection' | 'sonarcloudConnection'
     ) {
         super(label, collapsibleState);
     }
-
-    contextValue = 'connection';
 }
 
 export class ConnectionGroup extends VSCode.TreeItem {
@@ -34,8 +32,8 @@ export interface ConnectionsResponse {
 
 export function listAllConnections(): ConnectionsResponse {
     return {
-        'sonarqube': [{ id: 'Cat', label: '1.0', collapsibleState: VSCode.TreeItemCollapsibleState.None, contextValue: 'connection', type:'sonarqube' }],
-        'sonarcloud': [{ id: 'Dog', label: '21.0', collapsibleState: VSCode.TreeItemCollapsibleState.None, contextValue: 'connection', type: 'sonarcloud' }]
+        'sonarqube': [new Connection('Cat', '1.0',VSCode.TreeItemCollapsibleState.None,'sonarqubeConnection')],
+        'sonarcloud': [new Connection('Dog','21.0', VSCode.TreeItemCollapsibleState.None,'sonarcloudConnection')]
     }
 }
 

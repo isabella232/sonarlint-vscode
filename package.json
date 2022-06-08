@@ -456,6 +456,23 @@
         "command": "SonarLint.ConnectToSonarCloud",
         "title": "Connect to SonarCloud",
         "category": "SonarLint"
+      },
+      {
+        "command": "SonarLint.EditSonarQubeConnection",
+        "title": "Edit SonarQube Connection",
+        "category": "SonarLint"
+      },
+      {
+        "command": "SonarLint.EditSonarCloudConnection",
+        "title": "Edit SonarCloud Connection",
+        "category": "SonarLint",
+        "enablement": "view == SonarLint.ConnectedMode"
+      },
+      {
+        "command": "SonarLint.RemoveConnection",
+        "title": "Remove SonarQube/SonarCloud Connection",
+        "category": "SonarLint",
+        "enablement": "view == SonarLint.ConnectedMode"
       }
     ],
     "views": {
@@ -538,6 +555,18 @@
             "light": "images/connection/light/add.svg",
             "dark": "images/connection/dark/add.svg"
           },
+          "group": "inline"
+        },
+        {
+          "command": "SonarLint.EditSonarQubeConnection",
+          "title": "Edit",
+          "when": "view == SonarLint.ConnectedMode && viewItem == sonarqubeConnection",
+          "group": "inline"
+        },
+        {
+          "command": "SonarLint.EditSonarCloudConnection",
+          "title": "Edit",
+          "when": "view == SonarLint.ConnectedMode && viewItem == sonarcloudConnection",
           "group": "inline"
         }
       ]
