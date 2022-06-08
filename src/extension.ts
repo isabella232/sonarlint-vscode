@@ -14,6 +14,7 @@ import * as VSCode from 'vscode';
 import { LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
 import { SonarLintExtendedLanguageClient } from './client';
 import { Commands } from './commands';
+import { AllConnectionsTreeDataProvider } from './connections';
 import { GitExtension } from './git';
 import {
   hideSecurityHotspot,
@@ -36,9 +37,9 @@ declare let v8debug: object;
 const DEBUG = typeof v8debug === 'object' || util.startedInDebugMode(process);
 let currentConfig: VSCode.WorkspaceConfiguration;
 const FIRST_SECRET_ISSUE_DETECTED_KEY = 'FIRST_SECRET_ISSUE_DETECTED_KEY';
-const SONARLINT_CATEGORY='sonarlint';
+const SONARLINT_CATEGORY = 'sonarlint';
 const PATH_TO_COMPILE_COMMANDS = 'pathToCompileCommands';
-const FULL_PATH_TO_COMPILE_COMMANDS=`${SONARLINT_CATEGORY}.${PATH_TO_COMPILE_COMMANDS}`;
+const FULL_PATH_TO_COMPILE_COMMANDS = `${SONARLINT_CATEGORY}.${PATH_TO_COMPILE_COMMANDS}`;
 const DO_NOT_ASK_ABOUT_COMPILE_COMMANDS_FLAG = 'doNotAskAboutCompileCommands';
 let remindMeLaterAboutCompileCommandsFlag = false;
 
@@ -335,6 +336,12 @@ export function activate(context: VSCode.ExtensionContext) {
     VSCode.commands.registerCommand(Commands.CONFIGURE_COMPILATION_DATABASE, configureCompilationDatabase)
   );
 
+  const allConnectionsTreeDataProvider = new AllConnectionsTreeDataProvider();
+  const allConnectionsView = VSCode.window.createTreeView('SonarLint.ConnectedMode', {
+    treeDataProvider: allConnectionsTreeDataProvider
+  });
+  context.subscriptions.push(allConnectionsView);
+
   languageClient.start();
 
   context.subscriptions.push(onConfigurationChange());
@@ -398,8 +405,8 @@ async function showNotificationForFirstSecretsIssue(context: VSCode.ExtensionCon
   VSCode.window
     .showWarningMessage(
       'SonarLint detected some secrets in one of the open files.\n' +
-        'We strongly advise you to review those secrets and ensure they are not committed into repositories. ' +
-        'Please refer to the Problems view for more information.',
+      'We strongly advise you to review those secrets and ensure they are not committed into repositories. ' +
+      'Please refer to the Problems view for more information.',
       showProblemsViewActionTitle
     )
     .then(action => {
@@ -617,7 +624,7 @@ async function showCompilationDatabaseOptions(paths: VSCode.Uri[]) {
 
 function showMessageAndUpdateConfig(compilationDbPath: string) {
   VSCode.window.showInformationMessage(
-      `Analysis configured. Compilation database path is set to: ${compilationDbPath}`
+    `Analysis configured. Compilation database path is set to: ${compilationDbPath}`
   );
   const [pathForSettings, workspaceFolder] = tryRelativizeToWorkspaceFolder(compilationDbPath);
 
@@ -626,8 +633,8 @@ function showMessageAndUpdateConfig(compilationDbPath: string) {
     return config.update(PATH_TO_COMPILE_COMMANDS, pathForSettings, VSCode.ConfigurationTarget.WorkspaceFolder);
   }
   return VSCode.workspace
-      .getConfiguration()
-      .update(FULL_PATH_TO_COMPILE_COMMANDS, pathForSettings, VSCode.ConfigurationTarget.Workspace);
+    .getConfiguration()
+    .update(FULL_PATH_TO_COMPILE_COMMANDS, pathForSettings, VSCode.ConfigurationTarget.Workspace);
 }
 
 function tryRelativizeToWorkspaceFolder(path: string): [string, VSCode.WorkspaceFolder] {

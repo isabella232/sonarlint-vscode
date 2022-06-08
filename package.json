@@ -521,6 +521,24 @@
           "command": "SonarLint.ActivateRule",
           "when": "view == SonarLint.AllRules && viewItem == rule-off",
           "group": "inline"
+        },
+        {
+          "command": "SonarLint.ConnectToSonarQube",
+          "when": "view == SonarLint.ConnectedMode && viewItem == sonarQubeGroup",
+          "icon": {
+            "light": "images/connection/light/add.svg",
+            "dark": "images/connection/dark/add.svg"
+          },
+          "group": "inline"
+        },
+        {
+          "command": "SonarLint.ConnectToSonarCloud",
+          "when": "view == SonarLint.ConnectedMode && viewItem == sonarCloudGroup",
+          "icon": {
+            "light": "images/connection/light/add.svg",
+            "dark": "images/connection/dark/add.svg"
+          },
+          "group": "inline"
         }
       ]
     },
