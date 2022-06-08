@@ -34,7 +34,7 @@ export class ConnectionGroup extends VSCode.TreeItem {
         public readonly label: 'SonarQube' | 'SonarCloud',
         public readonly contextValue: 'sonarQubeGroup' | 'sonarCloudGroup'
     ) {
-        super(label, VSCode.TreeItemCollapsibleState.Collapsed)
+        super(label, VSCode.TreeItemCollapsibleState.Collapsed);
     }
 }
 
@@ -50,7 +50,7 @@ function listAllConnections(): ConnectionsResponse {
     return {
         'sonarqube': getConnections('sonarqube'),
         'sonarcloud': getConnections('sonarcloud')
-    }
+    };
 }
 
 function getConnections(type: string) : Connection[] {
@@ -78,16 +78,16 @@ export class AllConnectionsTreeDataProvider implements VSCode.TreeDataProvider<C
 
     getChildren(element?: ConnectionsNode): ConnectionsNode[] {
         if(!element){
-            return this.getInitialState()
+            return this.getInitialState();
         }
         const connectionsResponse = listAllConnections();
-        return connectionsResponse[element.id]
+        return connectionsResponse[element.id];
     }
 
     getInitialState() : ConnectionGroup[] {
         return [
             new ConnectionGroup('sonarqube', 'SonarQube', 'sonarQubeGroup'),
             new ConnectionGroup('sonarcloud', 'SonarCloud', 'sonarCloudGroup')
-        ]
+        ];
     }
 }
