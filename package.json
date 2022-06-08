@@ -450,29 +450,47 @@
       {
         "command": "SonarLint.ConnectToSonarQube",
         "title": "Connect to SonarQube",
-        "category": "SonarLint"
+        "category": "SonarLint",
+        "icon": {
+          "light": "images/connection/light/add.svg",
+          "dark": "images/connection/dark/add.svg"
+        }
       },
       {
         "command": "SonarLint.ConnectToSonarCloud",
         "title": "Connect to SonarCloud",
-        "category": "SonarLint"
+        "category": "SonarLint",
+        "icon": {
+          "light": "images/connection/light/add.svg",
+          "dark": "images/connection/dark/add.svg"
+        }
       },
       {
         "command": "SonarLint.EditSonarQubeConnection",
         "title": "Edit SonarQube Connection",
-        "category": "SonarLint"
+        "category": "SonarLint",
+        "icon": {
+          "light": "images/connection/light/edit.svg",
+          "dark": "images/connection/dark/edit.svg"
+        }
       },
       {
         "command": "SonarLint.EditSonarCloudConnection",
         "title": "Edit SonarCloud Connection",
         "category": "SonarLint",
-        "enablement": "view == SonarLint.ConnectedMode"
+        "icon": {
+          "light": "images/connection/light/edit.svg",
+          "dark": "images/connection/dark/edit.svg"
+        }
       },
       {
         "command": "SonarLint.RemoveConnection",
         "title": "Remove SonarQube/SonarCloud Connection",
         "category": "SonarLint",
-        "enablement": "view == SonarLint.ConnectedMode"
+        "icon": {
+          "light": "images/connection/light/remove.svg",
+          "dark": "images/connection/dark/remove.svg"
+        }
       }
     ],
     "views": {
@@ -542,19 +560,11 @@
         {
           "command": "SonarLint.ConnectToSonarQube",
           "when": "view == SonarLint.ConnectedMode && viewItem == sonarQubeGroup",
-          "icon": {
-            "light": "images/connection/light/add.svg",
-            "dark": "images/connection/dark/add.svg"
-          },
           "group": "inline"
         },
         {
           "command": "SonarLint.ConnectToSonarCloud",
           "when": "view == SonarLint.ConnectedMode && viewItem == sonarCloudGroup",
-          "icon": {
-            "light": "images/connection/light/add.svg",
-            "dark": "images/connection/dark/add.svg"
-          },
           "group": "inline"
         },
         {
@@ -567,6 +577,12 @@
           "command": "SonarLint.EditSonarCloudConnection",
           "title": "Edit",
           "when": "view == SonarLint.ConnectedMode && viewItem == sonarcloudConnection",
+          "group": "inline"
+        },
+        {
+          "command": "SonarLint.RemoveConnection",
+          "title": "Remove",
+          "when": "view == SonarLint.ConnectedMode && viewItem == sonarcloudConnection || viewItem == sonarqubeConnection",
           "group": "inline"
         }
       ]
