@@ -1,4 +1,19 @@
 import * as VSCode from 'vscode';
+import * as path from 'path';
+
+function getConnectionStatus(_connection: Connection){
+    const r = Math.random()
+    return r < 0.5 ? 'ok' : 'notok';
+}
+
+function getConnectionStatusIcon(connection : Connection){
+    if(connection.status === 'ok'){
+        return path.join(__filename, '../../..', 'images', 'connection', 'ok.svg');
+    } else if(connection.status === 'notok'){
+        return path.join(__filename, '../../..', 'images', 'connection', 'notok.svg');
+    }
+    return path.join(__filename, '../../..', 'images', 'connection', 'loading.svg');
+}
 
 export class Connection extends VSCode.TreeItem {
     constructor(
@@ -9,6 +24,8 @@ export class Connection extends VSCode.TreeItem {
         super(label, VSCode.TreeItemCollapsibleState.None);
     }
     collapsibleState = VSCode.TreeItemCollapsibleState.None;
+    status = getConnectionStatus(this);
+    iconPath = getConnectionStatusIcon(this);
 }
 
 export class ConnectionGroup extends VSCode.TreeItem {
