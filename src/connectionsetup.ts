@@ -14,17 +14,28 @@ import * as util from './util';
 
 let connectionSetupPanel: vscode.WebviewPanel;
 
+const sonarQubeNotificationsDocUrl = 'https://docs.sonarqube.org/latest/user-guide/sonarlint-notifications/';
+
 export function connectToSonarQube(context: vscode.ExtensionContext) {
   return () => {
     lazyCreateConnectionSetupPanel(context);
     connectionSetupPanel.webview.html = renderConnectionSetupPanel(context, connectionSetupPanel.webview);
     connectionSetupPanel.webview.onDidReceiveMessage(handleMessage);
-    connectionSetupPanel.iconPath = {
-      light: util.resolveExtensionFile('images/sonarqube.svg'),
-      dark: util.resolveExtensionFile('images/sonarqube.svg')
-    };
+    connectionSetupPanel.iconPath = util.resolveExtensionFile('images', 'sonarqube.svg');
     connectionSetupPanel.reveal();
   };
+}
+
+interface ConnectionCheckResult {
+  success: boolean;
+  reason?: string;
+}
+
+export function reportConnectionCheckResult(result: ConnectionCheckResult) {
+  if (connectionSetupPanel) {
+    const command = result.success ? 'connectionCheckSuccess' : 'connectionCheckFailure';
+    connectionSetupPanel.webview.postMessage({ command });
+  }
 }
 
 function lazyCreateConnectionSetupPanel(context: vscode.ExtensionContext) {
@@ -59,9 +70,11 @@ function renderConnectionSetupPanel(context: vscode.ExtensionContext, webview: v
   );
   const webviewMainUri = resolver.resolve('webview-ui', 'connectionsetup.js');
 
+  const serverProductName = 'SonarQube';
+
   return `<!doctype html><html lang="en">
     <head>
-      <title>SonarQube Connection</title>
+      <title>${serverProductName} Connection</title>
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
       <meta http-equiv="Encoding" content="utf-8" />
       <meta http-equiv="Content-Security-Policy"
@@ -71,26 +84,44 @@ function renderConnectionSetupPanel(context: vscode.ExtensionContext, webview: v
       <script type="module" src="${webviewMainUri}"></script>
     </head>
     <body>
-      <h1>SonarQube Connection</h1>
+      <h1>New ${serverProductName} Connection</h1>
       <form id="connectionForm">
-        <vscode-text-field id="connectionId" type="text" placeholder="My SonarQube Server" size="40"
-          title="Please give this connection a memorable name (optional)">
-          Connection Name
-        </vscode-text-field>
         <vscode-text-field id="serverUrl" type="url" placeholder="https://your.sonarqube.server/" required size="40"
-          title="The base URL for your SonarQube server">
+          title="The base URL for your SonarQube server" autofocus>
           Server URL
         </vscode-text-field>
         <vscode-button id="generateToken" disabled>Generate Token</vscode-button>
         <p>
-          You can use the button above to generate a user token in your SonarQube settings,
+          You can use the button above to generate a user token in your ${serverProductName} settings,
           copy it and paste it in the field below.
         </p>
         <vscode-text-field id="token" type="password" placeholder="········" required size="40"
-          title="A user token generated for your account on SonarQube">
+          title="A user token generated for your account on ${serverProductName}">
           User Token
         </vscode-text-field>
-        <vscode-button id="saveConnection" disabled>Save Connection</vscode-button>
+        <vscode-text-field id="connectionId" type="text" placeholder="My ${serverProductName} Server" size="40"
+          title="Optionally, please give this connection a memorable name">
+          Connection Name
+        </vscode-text-field>
+        <vscode-checkbox id="enableNotifications" checked>
+          Receive notifications from ${serverProductName}
+        </vscode-checkbox>
+        <p>
+          You will receive
+          <vscode-link target="_blank" href="${sonarQubeNotificationsDocUrl}">notifications</vscode-link>
+          from ${serverProductName} in situations like:
+        </p>
+        <ul>
+          <li>the Quality Gate status of a bound project changes</li>
+          <li>the latest analysis of a bound project on ${serverProductName} raises new issues assigned to you</li>
+        </ul>
+        <div id="connectionCheck">
+          <vscode-button id="saveConnection" disabled>Save Connection</vscode-button>
+          <span id="connectionProgress" class="hidden">
+            <vscode-progress-ring/>
+          </span>
+          <span id="connectionStatus"></span>
+        </div>
       </form>
     </body>
   </html>`;
@@ -106,6 +137,9 @@ export async function handleMessage(message) {
       break;
     case 'saveConnection':
       delete message.command;
+      if (!message.disableNotifications) {
+        delete message.disableNotifications;
+      }
       message.serverUrl = cleanServerUrl(message.serverUrl);
       await saveConnection(message);
       break;
@@ -123,21 +157,22 @@ interface SonarQubeConnection {
   connectionId?: string;
   serverUrl: string;
   token: string;
+  disableNotifications?: boolean;
 }
 
-async function saveConnection(message: SonarQubeConnection) {
+async function saveConnection(connection: SonarQubeConnection) {
   const configuration = vscode.workspace.getConfiguration('sonarlint');
   const sonarqubeConnectionsSection = 'connectedMode.connections.sonarqube';
   const existingConnections = configuration.get<Array<SonarQubeConnection>>(sonarqubeConnectionsSection);
   const matchingConnection = existingConnections
-    .find(c => c.connectionId === message.connectionId || c.serverUrl === message.serverUrl);
+    .find(c => c.connectionId === connection.connectionId || c.serverUrl === connection.serverUrl);
   if (matchingConnection) {
-    Object.assign(matchingConnection, message);
+    Object.assign(matchingConnection, connection);
   } else {
-    existingConnections.push(message);
+    existingConnections.push(connection);
   }
+  await connectionSetupPanel.webview.postMessage({ command: 'connectionCheckStart' });
   await configuration.update(sonarqubeConnectionsSection, existingConnections, ConfigurationTarget.Global);
-  connectionSetupPanel.dispose();
 }
 
 function cleanServerUrl(serverUrl: string) {

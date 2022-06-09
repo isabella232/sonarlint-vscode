@@ -14,7 +14,7 @@ import * as VSCode from 'vscode';
 import { LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
 import { SonarLintExtendedLanguageClient } from './client';
 import { Commands } from './commands';
-import { connectToSonarQube } from './connectionsetup';
+import { connectToSonarQube, reportConnectionCheckResult } from './connectionsetup';
 import { GitExtension } from './git';
 import {
   hideSecurityHotspot,
@@ -337,6 +337,12 @@ export function activate(context: VSCode.ExtensionContext) {
 
   context.subscriptions.push(
     VSCode.commands.registerCommand(Commands.CONNECT_TO_SONARQUBE, connectToSonarQube(context))
+  );
+  // TODO Remove this temporary command (also from package.json), should be triggered by LS notification instead
+  context.subscriptions.push(
+    VSCode.commands.registerCommand(
+      'SonarLint.ReportConnectionSuccess', () => reportConnectionCheckResult({ success: true })
+    )
   );
 
   languageClient.start();

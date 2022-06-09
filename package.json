@@ -452,6 +452,11 @@
         "command": "SonarLint.ConnectToSonarQube",
         "title": "Connect To SonarQube",
         "category": "SonarLint"
+      },
+      {
+        "command": "SonarLint.ReportConnectionSuccess",
+        "title": "Report Connection Success",
+        "category": "SonarLint"
       }
     ],
     "views": {

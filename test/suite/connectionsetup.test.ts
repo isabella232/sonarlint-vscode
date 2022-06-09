@@ -30,11 +30,13 @@ suite('Connection Setup', () => {
 
     const serverUrl = 'https://sonarqube.example';
     const token = 'definitely not a valid token';
+    const disableNotifications = false;
 
     await handleMessage({
       command: 'saveConnection',
       serverUrl,
-      token
+      token,
+      disableNotifications
     });
 
     const connectionsAfter = getSonarQubeConnections();
