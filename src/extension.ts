@@ -330,6 +330,9 @@ export function activate(context: VSCode.ExtensionContext) {
     if (event.affectsConfiguration('sonarlint.rules')) {
       allRulesTreeDataProvider.refresh();
     }
+    if(event.affectsConfiguration('sonarlint.connectedMode')) {
+      allConnectionsTreeDataProvider.refresh();
+    }
   });
 
   context.subscriptions.push(

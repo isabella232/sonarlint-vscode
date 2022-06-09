@@ -41,4 +41,10 @@ export namespace Commands {
   export const HIDE_HOTSPOT = 'SonarLint.HideHotspot';
   export const SHOW_HOTSPOT_DESCRIPTION = 'SonarLint.ShowHotspotDescription';
   export const CONFIGURE_COMPILATION_DATABASE = 'SonarLint.ConfigureCompilationDatabase';
+
+  export const CONNECT_TO_SONARQUBE = 'SonarLint.ConnectToSonarQube';
+  export const CONNECT_TO_SONARCLOUD = 'SonarLint.ConnectToSonarCloud';
+  export const EDIT_SONARQUBE_CONNECTION = 'SonarLint.EditSonarQubeConnection';
+  export const EDIT_SONARCLOUD_CONNECTION = 'SonarLint.EditSonarCloudConnection';
+  export const REMOVE_CONNECTION = 'SonarLint.RemoveConnection';
 }

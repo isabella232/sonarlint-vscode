@@ -6,13 +6,17 @@ function getConnectionStatus(_connection: Connection){
     return r < 0.5 ? 'ok' : 'notok';
 }
 
-function getConnectionStatusIcon(connection : Connection){
+function getPathToIcon(iconFileName : string) {
+    return path.join(__filename, '../../..', 'images', 'connection', iconFileName);
+}
+
+export function getConnectionStatusIcon(connection : Connection){
     if(connection.status === 'ok'){
-        return path.join(__filename, '../../..', 'images', 'connection', 'ok.svg');
+        return getPathToIcon('ok.svg')
     } else if(connection.status === 'notok'){
-        return path.join(__filename, '../../..', 'images', 'connection', 'notok.svg');
+        return getPathToIcon('notok.svg');
     }
-    return path.join(__filename, '../../..', 'images', 'connection', 'loading.svg');
+    return getPathToIcon('loading.svg');
 }
 
 export class Connection extends VSCode.TreeItem {
@@ -38,7 +42,6 @@ export class ConnectionGroup extends VSCode.TreeItem {
     }
 }
 
-
 export type ConnectionsNode = Connection | ConnectionGroup;
 
 export interface ConnectionsResponse {
@@ -53,7 +56,7 @@ function listAllConnections(): ConnectionsResponse {
     };
 }
 
-function getConnections(type: string) : Connection[] {
+export function getConnections(type: string) : Connection[] {
     const contextValue = type === 'sonarqube' ? 'sonarqubeConnection' : 'sonarcloudConnection';
     const labelKey = type === 'sonarqube' ? 'serverUrl' : 'organizationKey';
     let connections = VSCode.workspace.getConfiguration('sonarlint.connectedMode.connections')[type];
@@ -64,7 +67,7 @@ function getConnections(type: string) : Connection[] {
 export class AllConnectionsTreeDataProvider implements VSCode.TreeDataProvider<ConnectionsNode> {
 
     private readonly _onDidChangeTreeData = new VSCode.EventEmitter<Connection | undefined>();
-    readonly onDidChangeTreeData: VSCode.Event<Connection | undefined> = this._onDidChangeTreeData.event;
+    readonly onDidChangeTreeData: VSCode.Event<ConnectionsNode | undefined> = this._onDidChangeTreeData.event;
 
     constructor() { }
 
