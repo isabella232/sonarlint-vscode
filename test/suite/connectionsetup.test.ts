@@ -7,6 +7,7 @@
 
 import * as assert from 'assert';
 import * as vscode from 'vscode';
+import { sleep } from '../testutil';
 import { Commands } from '../../src/commands';
 import { handleMessage } from '../../src/connectionsetup';
 
@@ -23,10 +24,12 @@ suite('Connection Setup', () => {
   });
 
   test('should show webview when command is called', async () => {
+    const sleepTime = 1000;
     const connectionsBefore = getSonarQubeConnections();
     assert.deepStrictEqual(connectionsBefore, []);
 
     await vscode.commands.executeCommand(Commands.CONNECT_TO_SONARQUBE);
+    await sleep(sleepTime);
 
     const serverUrl = 'https://sonarqube.example';
     const token = 'definitely not a valid token';
@@ -38,10 +41,11 @@ suite('Connection Setup', () => {
       token,
       disableNotifications
     });
+    await sleep(sleepTime);
 
     const connectionsAfter = getSonarQubeConnections();
     assert.deepStrictEqual(connectionsAfter, [{ serverUrl, token }]);
-  });
+  }).timeout(5000);
 });
 
 function getSonarQubeConnections() {
