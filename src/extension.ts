@@ -14,7 +14,7 @@ import * as VSCode from 'vscode';
 import { LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
 import { SonarLintExtendedLanguageClient } from './client';
 import { Commands } from './commands';
-import { AllConnectionsTreeDataProvider } from './connections';
+import { AllConnectionsTreeDataProvider, getConnectionStatus } from './connections';
 import { GitExtension } from './git';
 import {
   hideSecurityHotspot,
@@ -344,6 +344,12 @@ export function activate(context: VSCode.ExtensionContext) {
     treeDataProvider: allConnectionsTreeDataProvider
   });
   context.subscriptions.push(allConnectionsView);
+  context.subscriptions.push(
+    VSCode.commands.registerCommand(Commands.REFRESH_CONNECTION, (_connection) => {
+      // TODO replace with real status check
+      allRulesTreeDataProvider.refresh();
+    })
+  );
 
   languageClient.start();
 

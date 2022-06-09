@@ -1,6 +1,11 @@
 import * as VSCode from 'vscode';
 import * as path from 'path';
 
+export function getConnectionStatus(_connectionId: string){
+    const r = Math.random();
+    return r < 0.5 ? 'ok' : 'notok';
+}
+
 export class Connection extends VSCode.TreeItem {
     constructor(
         public readonly id: string,
@@ -10,16 +15,11 @@ export class Connection extends VSCode.TreeItem {
         super(label, VSCode.TreeItemCollapsibleState.None);
     }
     collapsibleState = VSCode.TreeItemCollapsibleState.None;
-    status = this.getConnectionStatus(this);
+    status = getConnectionStatus(this.id);
     iconPath = this.getConnectionStatusIcon(this);
-
-    private getConnectionStatus(_connection: Connection){
-        const r = Math.random();
-        return r < 0.5 ? 'ok' : 'notok';
-    }
     
     private getPathToIcon(iconFileName : string) {
-        return path.join(__filename, '../../..', 'images', 'connection', iconFileName);
+        return path.join(__filename, '../..', 'images', 'connection', iconFileName);
     }
     
     private getConnectionStatusIcon(connection : Connection){
