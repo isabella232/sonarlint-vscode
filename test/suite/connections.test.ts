@@ -7,15 +7,12 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import {assert, expect} from 'chai';
+import {expect} from 'chai';
 import {
   AllConnectionsTreeDataProvider,
-  Connection,
-  getConnections,
-  getConnectionStatusIcon
+  getConnections
 } from "../../src/connections";
-import {describe, after, before, beforeEach} from 'mocha';
-import * as path from 'path';
+import {describe, beforeEach} from 'mocha';
 
 suite('Connected Mode Test Suite', () => {
   beforeEach(async () => {
@@ -110,27 +107,4 @@ suite('Connected Mode Test Suite', () => {
       expect(sonarCloudChildren[1].label).to.equal(testSCConfig[1].organizationKey)
     })
   })
-
-  describe('Connection Status Icons', () => {
-    test('should return path to `ok` icon', () => {
-      const testConnection = new Connection('test', 'https://next.sq.com', 'sonarqubeConnection');
-      testConnection.status = 'ok';
-      const iconPath = getConnectionStatusIcon(testConnection);
-      expect(iconPath).to.equal(path.join(__filename, '../../../..', 'images', 'connection', 'ok.svg'));
-    })
-
-    test('should return path to `notok` icon', () => {
-      const testConnection = new Connection('test', 'https://next.sq.com', 'sonarqubeConnection');
-      testConnection.status = 'notok';
-      const iconPath = getConnectionStatusIcon(testConnection);
-      expect(iconPath).to.equal(path.join(__filename, '../../../..', 'images', 'connection', 'notok.svg'));
-    })
-
-    test('should return path to `loading` icon', () => {
-      const testConnection = new Connection('test', 'https://next.sq.com', 'sonarqubeConnection');
-      testConnection.status = 'fdfsddfsdf';
-      const iconPath = getConnectionStatusIcon(testConnection);
-      expect(iconPath).to.equal(path.join(__filename, '../../../..', 'images', 'connection', 'loading.svg'));
-    })
-  });
 });

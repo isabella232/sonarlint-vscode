@@ -1,24 +1,6 @@
 import * as VSCode from 'vscode';
 import * as path from 'path';
 
-function getConnectionStatus(_connection: Connection){
-    const r = Math.random()
-    return r < 0.5 ? 'ok' : 'notok';
-}
-
-function getPathToIcon(iconFileName : string) {
-    return path.join(__filename, '../../..', 'images', 'connection', iconFileName);
-}
-
-export function getConnectionStatusIcon(connection : Connection){
-    if(connection.status === 'ok'){
-        return getPathToIcon('ok.svg')
-    } else if(connection.status === 'notok'){
-        return getPathToIcon('notok.svg');
-    }
-    return getPathToIcon('loading.svg');
-}
-
 export class Connection extends VSCode.TreeItem {
     constructor(
         public readonly id: string,
@@ -28,8 +10,26 @@ export class Connection extends VSCode.TreeItem {
         super(label, VSCode.TreeItemCollapsibleState.None);
     }
     collapsibleState = VSCode.TreeItemCollapsibleState.None;
-    status = getConnectionStatus(this);
-    iconPath = getConnectionStatusIcon(this);
+    status = this.getConnectionStatus(this);
+    iconPath = this.getConnectionStatusIcon(this);
+
+    private getConnectionStatus(_connection: Connection){
+        const r = Math.random();
+        return r < 0.5 ? 'ok' : 'notok';
+    }
+    
+    private getPathToIcon(iconFileName : string) {
+        return path.join(__filename, '../../..', 'images', 'connection', iconFileName);
+    }
+    
+    private getConnectionStatusIcon(connection : Connection){
+        if(connection.status === 'ok'){
+            return this.getPathToIcon('ok.svg');
+        } else if(connection.status === 'notok'){
+            return this.getPathToIcon('notok.svg');
+        }
+        return this.getPathToIcon('loading.svg');
+    }
 }
 
 export class ConnectionGroup extends VSCode.TreeItem {
